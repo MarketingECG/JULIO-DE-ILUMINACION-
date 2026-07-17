@@ -1,1 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Súper Promo Julio de Iluminación | TuVoltio</title>
+<meta name="description" content="Hasta 55% de descuento en cintas LED. Precios por unidad, bolsa y caja. Ofertas válidas del 16 al 31 de julio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="hexbg" aria-hidden="true"></div>
+  <div class="spark spark-1" aria-hidden="true">⚡</div>
+  <div class="spark spark-2" aria-hidden="true">⚡</div>
+
+  <div class="hero-inner">
+    <span class="eyebrow-badge">Súper Promo</span>
+    <h1 class="hero-title">
+      Julio de<br>Iluminación
+    </h1>
+    <p class="hero-sub">
+      Hasta <span class="hero-percent">55%</span> de descuento en Cintas LED
+    </p>
+    <a href="#productos" class="btn btn-primary hero-cta">Ver productos ↓</a>
+  </div>
+
+  <div class="reel-strip" aria-hidden="true">
+    <span style="--c:#B23BE0"></span>
+    <span style="--c:#2EA8E8"></span>
+    <span style="--c:#F4F1E6"></span>
+    <span style="--c:#FFD400"></span>
+    <span style="--c:#E8262F"></span>
+  </div>
+</header>
+
+<!-- ================= PRODUCTOS ================= -->
+<main id="productos" class="products-section">
+  <div class="section-head">
+    <h2>Elige tu cinta LED</h2>
+    <p>Entre más metros lleves, más ahorras. Precio minorista, por bolsa o por caja.</p>
+  </div>
+
+  <div id="loading-state" class="state-msg">Cargando productos…</div>
+  <div id="empty-state" class="state-msg" hidden>No hay productos disponibles en este momento. Vuelve pronto.</div>
+  <div id="error-state" class="state-msg" hidden>No pudimos cargar los productos. Intenta recargar la página.</div>
+
+  <div id="product-grid" class="product-grid" hidden></div>
+</main>
+
+<!-- ================= FOOTER / LEGAL ================= -->
+<footer class="site-footer">
+  <p class="legal-text">
+    Aplican términos y condiciones. Válido del 16 de julio de 2026 al 31 de julio de 2026 o hasta agotar existencias,
+    lo que ocurra primero. No acumulable con otras promociones. Consulta términos y condiciones en
+    <a href="https://www.tuvoltio.com" target="_blank" rel="noopener">www.tuvoltio.com</a>.
+  </p>
+</footer>
+
+<!-- Plantilla de tarjeta de producto (se clona por JS) -->
+<template id="product-card-template">
+  <article class="product-card">
+    <div class="card-badge" hidden></div>
+    <div class="card-image-wrap">
+      <img class="card-image" src="" alt="">
+    </div>
+    <h3 class="card-name"></h3>
+    <div class="card-tags"></div>
+
+    <div class="tier-ladder">
+      <div class="tier tier-unit">
+        <span class="tier-label">Minorista</span>
+        <span class="tier-price"></span>
+        <span class="tier-qty"></span>
+      </div>
+      <div class="tier tier-bag">
+        <span class="tier-reel" aria-hidden="true"></span>
+        <span class="tier-label">Bolsa</span>
+        <span class="tier-price"></span>
+        <span class="tier-qty"></span>
+      </div>
+      <div class="tier tier-box">
+        <span class="tier-reel tier-reel-full" aria-hidden="true"></span>
+        <span class="tier-label">Caja</span>
+        <span class="tier-price"></span>
+        <span class="tier-qty"></span>
+      </div>
+    </div>
+
+    <p class="card-discount-note"></p>
+    <a class="btn btn-buy" href="#" target="_blank" rel="noopener">Ir a comprar</a>
+  </article>
+</template>
+
+<script src="script.js"></script>
+</body>
+</html>
