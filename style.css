@@ -93,7 +93,7 @@ a { color: inherit; }
   background-image:
     repeating-linear-gradient(120deg, transparent 0 58px, rgba(255,255,255,0.035) 58px 60px),
     repeating-linear-gradient(60deg, transparent 0 58px, rgba(255,255,255,0.035) 58px 60px);
-  background-size: 116px 200px;
+  background-size: 100px 150px;
 }
 
 .spark {
