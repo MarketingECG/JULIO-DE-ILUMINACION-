@@ -271,4 +271,3 @@ document.addEventListener("keydown", (event) => {
 
 fetchCounter();
 
-
