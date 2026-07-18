@@ -12,7 +12,8 @@ const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSt9KORPY
 /* Columnas esperadas en el Google Sheet (encabezados exactos, en la fila 1):
    activo | orden | nombre | tipo | color | voltaje | imagen_url |
    precio_minorista | cantidad_bolsa | precio_bolsa |
-   cantidad_caja | precio_caja | descuento_texto | badge | link_compra
+   cantidad_caja | precio_caja | descuento_texto | badge | link_compra |
+   video_url
 */
 
 /* ============================================================
@@ -39,6 +40,10 @@ const modalClose = document.getElementById("modal-close");
 const modalOptions = document.getElementById("modal-options");
 const modalCounter = document.getElementById("modal-counter");
 const modalCounterValue = document.getElementById("modal-counter-value");
+
+const videoModal = document.getElementById("video-modal");
+const videoModalClose = document.getElementById("video-modal-close");
+const videoFrame = document.getElementById("video-frame");
 
 let activeVoltage = "all";
 
@@ -116,6 +121,12 @@ function buildCard(row) {
 
   const buyBtn = node.querySelector(".btn-buy");
   buyBtn.href = row.link_compra || "https://www.tuvoltio.com";
+
+  const videoBtn = node.querySelector(".btn-video");
+  if (row.video_url && row.video_url.trim()) {
+    videoBtn.hidden = false;
+    videoBtn.dataset.video = row.video_url.trim();
+  }
 
   return node;
 }
@@ -270,4 +281,74 @@ document.addEventListener("keydown", (event) => {
 });
 
 fetchCounter();
+
+/* ============================================================
+   MODAL DE VIDEO (adaptable vertical / horizontal)
+   ============================================================ */
+function getYoutubeId(url) {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/))([a-zA-Z0-9_-]{6,})/);
+  return match ? match[1] : null;
+}
+
+function getVimeoId(url) {
+  const match = url.match(/vimeo\.com\/(\d+)/);
+  return match ? match[1] : null;
+}
+
+function openVideoModal(url) {
+  videoFrame.innerHTML = "";
+
+  const youtubeId = getYoutubeId(url);
+  const vimeoId = getVimeoId(url);
+  const isVertical = /shorts\//.test(url);
+
+  let el;
+
+  if (youtubeId) {
+    el = document.createElement("iframe");
+    el.src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0`;
+    el.allow = "autoplay; encrypted-media; picture-in-picture";
+    el.allowFullscreen = true;
+    el.className = isVertical ? "is-vertical" : "is-horizontal";
+  } else if (vimeoId) {
+    el = document.createElement("iframe");
+    el.src = `https://player.vimeo.com/video/${vimeoId}?autoplay=1`;
+    el.allow = "autoplay; fullscreen; picture-in-picture";
+    el.allowFullscreen = true;
+    el.className = "is-horizontal";
+  } else {
+    // Link directo a un archivo de video (mp4, webm...): el navegador
+    // conoce sus dimensiones reales y la caja se adapta sola, sea
+    // vertical u horizontal.
+    el = document.createElement("video");
+    el.src = url;
+    el.controls = true;
+    el.autoplay = true;
+    el.playsInline = true;
+  }
+
+  videoFrame.appendChild(el);
+  videoModal.hidden = false;
+}
+
+function closeVideoModal() {
+  videoModal.hidden = true;
+  videoFrame.innerHTML = ""; // detiene la reproducción al cerrar
+}
+
+grid.addEventListener("click", (event) => {
+  const btn = event.target.closest(".btn-video");
+  if (!btn) return;
+  openVideoModal(btn.dataset.video);
+});
+
+videoModalClose.addEventListener("click", closeVideoModal);
+
+videoModal.addEventListener("click", (event) => {
+  if (event.target === videoModal) closeVideoModal();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !videoModal.hidden) closeVideoModal();
+});
 
