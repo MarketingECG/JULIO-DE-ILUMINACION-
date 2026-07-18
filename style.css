@@ -184,41 +184,125 @@ a { color: inherit; }
   font-size: 1rem;
 }
 
-.voltage-filters {
+/* ============================================
+   MODAL DE BIENVENIDA (selector de voltaje)
+   ============================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(6, 13, 33, 0.78);
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 36px;
+  padding: 20px;
 }
 
-.filter-pill {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--ink-soft);
-  background: transparent;
+.modal-overlay[hidden] { display: none; }
+
+.modal-card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background: var(--navy-mid);
   border: 1px solid var(--navy-line);
-  border-radius: 999px;
-  padding: 9px 20px;
+  border-radius: var(--radius-lg);
+  padding: 32px 28px 28px;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--navy-line);
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.modal-close:hover { color: var(--white); border-color: var(--yellow); }
+.modal-close:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+
+.modal-eyebrow {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--yellow-soft);
+  margin-bottom: 10px;
 }
 
-.filter-pill:hover {
-  border-color: var(--yellow);
+.modal-card h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1.2;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+}
+
+.modal-sub {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  margin: 0 0 24px;
+}
+
+.modal-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.modal-option {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 1rem;
   color: var(--white);
+  background: var(--navy-deep);
+  border: 1px solid var(--navy-line);
+  border-radius: var(--radius-sm);
+  padding: 14px 10px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
 }
 
-.filter-pill:focus-visible {
+.modal-option:hover {
+  border-color: var(--yellow);
+  transform: translateY(-2px);
+}
+.modal-option:focus-visible {
   outline: 3px solid var(--yellow);
   outline-offset: 2px;
 }
 
-.filter-pill.is-active {
+.modal-option-all {
+  grid-column: 1 / 3;
   background: var(--yellow);
-  border-color: var(--yellow);
   color: var(--navy-deep);
+  border-color: var(--yellow);
+  font-family: var(--font-body);
+}
+.modal-option-all:hover { background: var(--yellow-soft); }
+
+.modal-counter {
+  margin: 22px 0 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+#modal-counter-value {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--yellow-soft);
+}
+
+@media (max-width: 480px) {
+  .modal-card { padding: 26px 20px 22px; }
 }
 
 .voltage-filters {
