@@ -313,6 +313,10 @@ a { color: inherit; }
   margin-bottom: 40px;
 }
 
+.voltage-filters[hidden] {
+  display: none;
+}
+
 .filter-pill {
   font-family: var(--font-mono);
   font-size: 0.85rem;
@@ -355,6 +359,10 @@ a { color: inherit; }
   gap: 26px;
 }
 
+.product-grid[hidden] {
+  display: none;
+}
+
 /* ============================================
    PRODUCT CARD
    ============================================ */
@@ -366,6 +374,10 @@ a { color: inherit; }
   padding: 20px;
   display: flex;
   flex-direction: column;
+}
+
+.product-card[hidden] {
+  display: none;
 }
 
 .card-badge {
