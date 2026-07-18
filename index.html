@@ -12,6 +12,28 @@
 </head>
 <body>
 
+<!-- ================= MODAL DE BIENVENIDA ================= -->
+<div id="voltage-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-card">
+    <button type="button" class="modal-close" id="modal-close" aria-label="Cerrar y ver todos los productos">✕</button>
+    <span class="modal-eyebrow">Antes de empezar</span>
+    <h2 id="modal-title">¿Qué voltaje de cinta buscas?</h2>
+    <p class="modal-sub">Te mostramos directo lo que te sirve.</p>
+
+    <div class="modal-options" id="modal-options">
+      <button type="button" class="modal-option" data-voltage="5V">5V</button>
+      <button type="button" class="modal-option" data-voltage="12V">12V</button>
+      <button type="button" class="modal-option" data-voltage="24V">24V</button>
+      <button type="button" class="modal-option" data-voltage="110V">110V</button>
+      <button type="button" class="modal-option modal-option-all" data-voltage="all">Me interesan todos</button>
+    </div>
+
+    <p class="modal-counter" id="modal-counter" hidden>
+      🔥 <span id="modal-counter-value">0</span> personas ya eligieron su cinta ideal
+    </p>
+  </div>
+</div>
+
 <!-- ================= HERO ================= -->
 <header class="hero">
   <div class="hexbg" aria-hidden="true"></div>
@@ -104,4 +126,5 @@
 <script src="script.js"></script>
 </body>
 </html>
+
 
