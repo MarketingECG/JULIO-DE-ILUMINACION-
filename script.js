@@ -15,6 +15,17 @@ const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSt9KORPY
    cantidad_caja | precio_caja | descuento_texto | badge | link_compra
 */
 
+/* ============================================================
+   CONTADOR DE INTERACCIONES (opcional)
+   ============================================================
+   Si quieres el contador "X personas ya eligieron su cinta ideal",
+   sigue los pasos de la sección "Contador de interacciones" del
+   README y pega aquí la URL que te da Google Apps Script al
+   implementar. Si lo dejas vacío, el modal funciona igual mostrando
+   los filtros por voltaje, simplemente no aparece el contador.
+   ============================================================ */
+const COUNTER_APPS_SCRIPT_URL = "";
+
 const grid = document.getElementById("product-grid");
 const loadingState = document.getElementById("loading-state");
 const emptyState = document.getElementById("empty-state");
@@ -22,6 +33,12 @@ const errorState = document.getElementById("error-state");
 const filterEmptyState = document.getElementById("filter-empty-state");
 const filtersWrap = document.getElementById("voltage-filters");
 const template = document.getElementById("product-card-template");
+
+const modal = document.getElementById("voltage-modal");
+const modalClose = document.getElementById("modal-close");
+const modalOptions = document.getElementById("modal-options");
+const modalCounter = document.getElementById("modal-counter");
+const modalCounterValue = document.getElementById("modal-counter-value");
 
 let activeVoltage = "all";
 
@@ -133,8 +150,9 @@ function applyVoltageFilter(voltage) {
   });
 
   const cards = grid.querySelectorAll(".product-card");
-  let visibleCount = 0;
+  if (cards.length === 0) return; // los productos aún no cargan; se aplica al terminar de renderizar
 
+  let visibleCount = 0;
   cards.forEach((card) => {
     const matches = voltage === "all" || card.dataset.voltage === voltage;
     card.hidden = !matches;
@@ -166,6 +184,7 @@ function renderProducts(rows) {
   buildVoltageFilters(activos);
   activos.forEach((row) => grid.appendChild(buildCard(row)));
   grid.hidden = false;
+  applyVoltageFilter(activeVoltage);
 }
 
 function loadProducts() {
@@ -182,5 +201,74 @@ function loadProducts() {
 }
 
 loadProducts();
+
+/* ============================================================
+   MODAL DE BIENVENIDA + CONTADOR DE INTERACCIONES
+   ============================================================ */
+function closeModal() {
+  modal.hidden = true;
+}
+
+function fetchCounter() {
+  if (!COUNTER_APPS_SCRIPT_URL) return;
+
+  fetch(COUNTER_APPS_SCRIPT_URL)
+    .then((res) => res.json())
+    .then((data) => {
+      modalCounterValue.textContent = (data.total || 0).toLocaleString("es-CO");
+      modalCounter.hidden = false;
+    })
+    .catch(() => {
+      // Si falla, simplemente no mostramos el contador; el modal sigue funcionando.
+    });
+}
+
+function logInteraction(voltage) {
+  if (!COUNTER_APPS_SCRIPT_URL) return;
+
+  // Actualiza el número en pantalla al toque, sin esperar respuesta del servidor.
+  const current = Number(modalCounterValue.textContent.replace(/[^0-9]/g, "")) || 0;
+  modalCounterValue.textContent = (current + 1).toLocaleString("es-CO");
+  modalCounter.hidden = false;
+
+  fetch(COUNTER_APPS_SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({ voltaje: voltage }),
+  }).catch(() => {
+    // Si falla el registro, no interrumpe la experiencia del usuario.
+  });
+}
+
+modalOptions.addEventListener("click", (event) => {
+  const btn = event.target.closest(".modal-option");
+  if (!btn) return;
+
+  const voltage = btn.dataset.voltage;
+  logInteraction(voltage);
+  applyVoltageFilter(voltage);
+  closeModal();
+});
+
+modalClose.addEventListener("click", () => {
+  applyVoltageFilter("all");
+  closeModal();
+});
+
+modal.addEventListener("click", (event) => {
+  if (event.target === modal) {
+    applyVoltageFilter("all");
+    closeModal();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !modal.hidden) {
+    applyVoltageFilter("all");
+    closeModal();
+  }
+});
+
+fetchCounter();
 
 
