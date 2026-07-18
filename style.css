@@ -305,6 +305,69 @@ a { color: inherit; }
   .modal-card { padding: 26px 20px 22px; }
 }
 
+/* ============================================
+   MODAL DE VIDEO (adaptable vertical / horizontal)
+   ============================================ */
+.video-overlay {
+  background: rgba(3, 8, 20, 0.9);
+}
+
+.video-modal-card {
+  position: relative;
+  display: flex;
+  max-width: 92vw;
+  max-height: 92vh;
+}
+
+.video-modal-card .modal-close {
+  top: -14px;
+  right: -14px;
+  background: var(--navy-mid);
+  z-index: 2;
+}
+
+.video-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+/* El video o iframe conserva su proporción real: si es vertical, se
+   limita por alto; si es horizontal, se limita por ancho. Nunca se
+   deforma ni se recorta. */
+.video-frame video,
+.video-frame iframe {
+  max-width: 92vw;
+  max-height: 92vh;
+  width: auto;
+  height: auto;
+  border: none;
+  border-radius: 14px;
+  background: #000;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+/* Los iframes (YouTube/Vimeo) no reportan su proporción real al navegador,
+   así que les damos un tamaño base horizontal u vertical según el caso
+   marcado por JS con esta clase. */
+.video-frame iframe.is-vertical {
+  width: min(92vw, 400px);
+  height: min(92vh, 711px);
+}
+
+.video-frame iframe.is-horizontal {
+  width: min(92vw, 860px);
+  height: min(92vh, 484px);
+}
+
+@media (max-width: 480px) {
+  .video-modal-card .modal-close {
+    top: -44px;
+    right: 0;
+  }
+}
+
 .voltage-filters {
   display: flex;
   flex-wrap: wrap;
@@ -496,6 +559,31 @@ a { color: inherit; }
   color: var(--yellow-soft);
   margin: 4px 0 0;
   font-weight: 600;
+}
+
+.card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.card-actions .btn-buy {
+  margin-top: 0;
+  flex: 1;
+}
+
+.btn-video {
+  flex-shrink: 0;
+  background: transparent;
+  color: var(--yellow-soft);
+  border: 1px solid var(--navy-line);
+  font-family: var(--font-body);
+  padding: 14px 16px;
+}
+
+.btn-video:hover {
+  border-color: var(--yellow);
+  color: var(--yellow);
 }
 
 /* ============================================
