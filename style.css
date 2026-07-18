@@ -184,6 +184,80 @@ a { color: inherit; }
   font-size: 1rem;
 }
 
+.voltage-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 36px;
+}
+
+.filter-pill {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  background: transparent;
+  border: 1px solid var(--navy-line);
+  border-radius: 999px;
+  padding: 9px 20px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.filter-pill:hover {
+  border-color: var(--yellow);
+  color: var(--white);
+}
+
+.filter-pill:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 2px;
+}
+
+.filter-pill.is-active {
+  background: var(--yellow);
+  border-color: var(--yellow);
+  color: var(--navy-deep);
+}
+
+.voltage-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.filter-pill {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  background: var(--navy-mid);
+  border: 1px solid var(--navy-line);
+  border-radius: 999px;
+  padding: 9px 20px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.filter-pill:hover {
+  border-color: var(--yellow);
+  color: var(--white);
+}
+
+.filter-pill:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 2px;
+}
+
+.filter-pill.is-active {
+  background: var(--yellow);
+  border-color: var(--yellow);
+  color: var(--navy-deep);
+}
+
 .state-msg {
   text-align: center;
   color: var(--ink-soft);
