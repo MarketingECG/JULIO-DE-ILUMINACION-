@@ -45,9 +45,14 @@
     <p>Entre más metros lleves, más ahorras. Precio minorista, por bolsa o por caja.</p>
   </div>
 
+  <div id="voltage-filters" class="voltage-filters" role="group" aria-label="Filtrar por voltaje" hidden>
+    <button type="button" class="filter-pill is-active" data-voltage="all">Todos</button>
+  </div>
+
   <div id="loading-state" class="state-msg">Cargando productos…</div>
   <div id="empty-state" class="state-msg" hidden>No hay productos disponibles en este momento. Vuelve pronto.</div>
   <div id="error-state" class="state-msg" hidden>No pudimos cargar los productos. Intenta recargar la página.</div>
+  <div id="filter-empty-state" class="state-msg" hidden>No tenemos cintas de este voltaje por ahora. Prueba con otro filtro.</div>
 
   <div id="product-grid" class="product-grid" hidden></div>
 </main>
@@ -99,3 +104,4 @@
 <script src="script.js"></script>
 </body>
 </html>
+
