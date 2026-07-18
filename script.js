@@ -1,9 +1,37 @@
+/* ============================================================
+   CONFIGURACIÓN — lo único que debes cambiar
+   ============================================================
+   1. Abre tu Google Sheet.
+   2. Archivo > Compartir > Publicar en la web.
+   3. Elige la hoja correcta y el formato "Valores separados por comas (.csv)".
+   4. Copia el link que te da Google y pégalo abajo, reemplazando
+      la URL de ejemplo.
+   ============================================================ */
 const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSt9KORPY7MxVuP8WgtUsy290ueFK0twcckpJGvuV540cf25bwBq2k0yJsr_oeAs4N79D-yZDbvaAPY/pub?gid=0&single=true&output=csv";
+
+/* Columnas esperadas en el Google Sheet (encabezados exactos, en la fila 1):
+   activo | orden | nombre | tipo | color | voltaje | imagen_url |
+   precio_minorista | cantidad_bolsa | precio_bolsa |
+   cantidad_caja | precio_caja | descuento_texto | badge | link_compra
+*/
+
 const grid = document.getElementById("product-grid");
 const loadingState = document.getElementById("loading-state");
 const emptyState = document.getElementById("empty-state");
 const errorState = document.getElementById("error-state");
+const filterEmptyState = document.getElementById("filter-empty-state");
+const filtersWrap = document.getElementById("voltage-filters");
 const template = document.getElementById("product-card-template");
+
+let activeVoltage = "all";
+
+/* Orden preferido de los voltajes más comunes; cualquier otro voltaje
+   que aparezca en el Sheet se agrega al final en el orden en que se encuentre. */
+const VOLTAGE_ORDER = ["5V", "12V", "24V", "110V", "220V"];
+
+function normalizeVoltage(value) {
+  return String(value || "").trim().toUpperCase();
+}
 
 function formatCOP(value) {
   const num = Number(String(value).replace(/[^0-9.-]/g, ""));
@@ -18,6 +46,7 @@ function isTrue(value) {
 function buildCard(row) {
   const node = template.content.cloneNode(true);
   const card = node.querySelector(".product-card");
+  card.dataset.voltage = normalizeVoltage(row.voltaje);
 
   const badge = node.querySelector(".card-badge");
   if (row.badge && row.badge.trim()) {
@@ -74,6 +103,54 @@ function buildCard(row) {
   return node;
 }
 
+function buildVoltageFilters(rows) {
+  const found = [...new Set(rows.map((row) => normalizeVoltage(row.voltaje)).filter(Boolean))];
+
+  const ordered = [
+    ...VOLTAGE_ORDER.filter((v) => found.includes(v)),
+    ...found.filter((v) => !VOLTAGE_ORDER.includes(v)),
+  ];
+
+  if (ordered.length < 2) return; // no vale la pena filtrar con un solo voltaje
+
+  ordered.forEach((voltage) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "filter-pill";
+    btn.dataset.voltage = voltage;
+    btn.textContent = voltage;
+    filtersWrap.appendChild(btn);
+  });
+
+  filtersWrap.hidden = false;
+}
+
+function applyVoltageFilter(voltage) {
+  activeVoltage = voltage;
+
+  filtersWrap.querySelectorAll(".filter-pill").forEach((btn) => {
+    btn.classList.toggle("is-active", btn.dataset.voltage === voltage);
+  });
+
+  const cards = grid.querySelectorAll(".product-card");
+  let visibleCount = 0;
+
+  cards.forEach((card) => {
+    const matches = voltage === "all" || card.dataset.voltage === voltage;
+    card.hidden = !matches;
+    if (matches) visibleCount += 1;
+  });
+
+  filterEmptyState.hidden = visibleCount > 0;
+  grid.hidden = visibleCount === 0;
+}
+
+filtersWrap.addEventListener("click", (event) => {
+  const btn = event.target.closest(".filter-pill");
+  if (!btn) return;
+  applyVoltageFilter(btn.dataset.voltage);
+});
+
 function renderProducts(rows) {
   const activos = rows
     .filter((row) => isTrue(row.activo) && row.nombre && row.nombre.trim())
@@ -86,6 +163,7 @@ function renderProducts(rows) {
     return;
   }
 
+  buildVoltageFilters(activos);
   activos.forEach((row) => grid.appendChild(buildCard(row)));
   grid.hidden = false;
 }
@@ -104,4 +182,5 @@ function loadProducts() {
 }
 
 loadProducts();
+
 
